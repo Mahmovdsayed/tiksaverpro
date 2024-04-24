@@ -79,6 +79,7 @@ export default function Nav() {
                             <Image
                                 radius="none"
                                 className="w-[200px]"
+                                alt="TikSaverPro"
                                 src="https://res.cloudinary.com/dxvpvtcbg/image/upload/v1713853065/ljdu31w3pwjhgfaywvrg.svg"
                             />
 
