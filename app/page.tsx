@@ -1,4 +1,3 @@
-'use client'
 import MainSection from "@/components/section/Main";
 import Image from "next/image";
 
