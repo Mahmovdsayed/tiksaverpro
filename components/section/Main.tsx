@@ -38,7 +38,6 @@ const MainSection = ({ }: IProps) => {
             const data = await fetch(`https://snapdouyin.app/wp-json/aio-dl/video-data/?url=${value}`, options)
             const response = await data.json()
             setData(response)
-           
             setDownloads(response.medias)
             setisLoading(false)
         } catch (error: any) {
