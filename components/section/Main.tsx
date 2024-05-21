@@ -60,7 +60,7 @@ const MainSection = ({ }: IProps) => {
     function onClear() {
         router.replace(`/`);
     }
-    const TiktokLink = /^(?:https?:\/\/)?(?:www\.)?(?:tiktok\.com\/(?:@[\w.-]+\/video\/\d+)|(?:vm\.tiktok\.com\/[\w.-]+))\/?$/;
+    const TiktokLink = /^(?:https?:\/\/)?(?:www\.)?(?:tiktok\.com\/(?:@[\w.-]+\/video\/\d+)|(?:vm\.tiktok\.com\/[\w.-]+)|(?:vt\.tiktok\.com\/[\w.-]+))\/?$/;
     let validatScheme = yup.object({
         url: yup
             .string()
@@ -153,6 +153,8 @@ const MainSection = ({ }: IProps) => {
                     <span>https://www.tiktok.com/@username/video/1234567890123456789</span>
                     <span>https://vm.tiktok.com/abcdefg/</span>
                     <span>https://vm.tiktok.com/abcdefg</span>
+                    <span>https://vt.tiktok.com/abcdefg/</span>
+                    <span>https://vt.tiktok.com/abcdefg</span>
                 </CardBody>
             </Card>
         </div>
