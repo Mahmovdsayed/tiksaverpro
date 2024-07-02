@@ -14,7 +14,6 @@ export default function Error({
     // Log the error to an error reporting service
     console.error(error)
   }, [error])
- 
   return (
     <div className='text-center min-h-[100vh] flex flex-col items-center justify-center'>
       <h2>Something went wrong!</h2>
