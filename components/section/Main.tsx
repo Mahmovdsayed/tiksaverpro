@@ -80,6 +80,7 @@ const MainSection = ({ }: IProps) => {
     }
     const saveFile = async (url: string) => {
     try {
+        toast.success("Please wait a moment while your download completes", { duration: 2000 });
         const response = await fetch(url);
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
@@ -91,7 +92,7 @@ const MainSection = ({ }: IProps) => {
         link.click();
         document.body.removeChild(link);
 
-        toast.success("Please wait a moment while your download completes", { duration: 2000 });
+        
     } catch (error) {
         console.error("Error downloading file:", error);
         toast.error("Failed to download the file. Please try again later.");
