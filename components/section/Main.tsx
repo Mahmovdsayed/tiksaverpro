@@ -146,7 +146,7 @@ const MainSection = ({ }: IProps) => {
             ""
         )}
         <div className="w-full md:w-1/2 px-6 flex mt-4 justify-center items-center">
-            <Card className="bg-gray-200 dark:bg-[#18181B]" shadow="none">
+            <Card className="bg-[#f0f0f0] dark:bg-[#181818]" shadow="none">
                 <CardHeader className="text-tiny md:text-md">we only accept links in the following formats</CardHeader>
                 <CardBody className="flex flex-col space-y-2 text-tiny text-indigo-400">
                     <span>https://www.tiktok.com/@username/video/1234567890123456789/</span>
