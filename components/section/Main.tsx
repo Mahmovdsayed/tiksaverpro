@@ -78,13 +78,25 @@ const MainSection = ({ }: IProps) => {
         router.replace(`/?s=${value}`)
         DownloadVideo()
     }
-    const saveFile = (url: any) => {
-        fileSaver.saveAs(
-            url,
-            `tiksaverpro`
-        );
-        toast.success("Please wait a moment while your download completes", { duration: 2000 })
+    const saveFile = async (url: string) => {
+    try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = `tiksaverpro`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        toast.success("Please wait a moment while your download completes", { duration: 2000 });
+    } catch (error) {
+        console.error("Error downloading file:", error);
+        toast.error("Failed to download the file. Please try again later.");
     }
+};
     return <>
         <div className="text-center mt-6 px-6">
             <h1 className="text-xl lg:text-2xl  font-medium"><span className="font-bold text-pink-600">TikTok Video Downloader</span> - Download High-Quality Videos Without Watermark</h1>
