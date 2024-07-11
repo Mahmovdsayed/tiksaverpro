@@ -81,16 +81,21 @@ const MainSection = ({ }: IProps) => {
 const saveFile = async (url: string) => {
     try {
         toast.success("Please wait a moment while your download completes", { duration: 2000 });
-        
-        // Fetch the file as a stream to handle large files more efficiently
+
         const response = await fetch(url);
+        
+        // Check if the response body exists and is not null
+        if (!response.body) {
+            throw new Error("Response body is null");
+        }
+
         const reader = response.body.getReader();
-        const stream = new ReadableStream({
+        const stream = new ReadableStream<Uint8Array>({
             async start(controller) {
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
-                    controller.enqueue(value);
+                    controller.enqueue(value!);
                 }
                 controller.close();
             }
@@ -105,7 +110,7 @@ const saveFile = async (url: string) => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         toast.success("Download complete!");
         
     } catch (error) {
