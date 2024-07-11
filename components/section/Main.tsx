@@ -79,15 +79,21 @@ const MainSection = ({ }: IProps) => {
         DownloadVideo()
     }
 
-const saveFile = async (url: string) => {
+    const saveFile = async (url: string) => {
     try {
         toast.success("Please wait a moment while your download completes", { duration: 2000 });
+
         const response = await fetch(url);
         if (!response.ok) throw new Error("Network response was not ok");
 
-        const reader = response.body.getReader();
-        const contentLength = +response.headers.get('Content-Length');
+        if (!response.body) throw new Error("ReadableStream not yet supported in this browser.");
 
+        const contentLength = response.headers.get('Content-Length');
+        if (!contentLength) throw new Error("Content-Length response header missing.");
+
+        const reader = response.body.getReader();
+        const total = parseInt(contentLength, 10);
+        
         let receivedLength = 0;
         const chunks = [];
 
@@ -98,8 +104,9 @@ const saveFile = async (url: string) => {
             receivedLength += value.length;
 
             // Display progress
-            console.log(`Received ${receivedLength} of ${contentLength}`);
-            toast(`Downloading: ${Math.round((receivedLength / contentLength) * 100)}%`, { duration: 1000 });
+            const percentage = Math.round((receivedLength / total) * 100);
+            console.log(`Received ${receivedLength} of ${total} (${percentage}%)`);
+            toast(`Downloading: ${percentage}%`, { duration: 1000 });
         }
 
         const blob = new Blob(chunks);
