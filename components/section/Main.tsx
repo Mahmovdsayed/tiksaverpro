@@ -82,34 +82,8 @@ const MainSection = ({ }: IProps) => {
     const saveFile = async (url: string) => {
     try {
         toast.success("Please wait a moment while your download completes", { duration: 2000 });
-
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Network response was not ok");
-
-        if (!response.body) throw new Error("ReadableStream not yet supported in this browser.");
-
-        const contentLength = response.headers.get('Content-Length');
-        if (!contentLength) throw new Error("Content-Length response header missing.");
-
-        const reader = response.body.getReader();
-        const total = parseInt(contentLength, 10);
-        
-        let receivedLength = 0;
-        const chunks = [];
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            receivedLength += value.length;
-
-            // Display progress
-            const percentage = Math.round((receivedLength / total) * 100);
-            console.log(`Received ${receivedLength} of ${total} (${percentage}%)`);
-            toast(`Downloading: ${percentage}%`, { duration: 1000 });
-        }
-
-        const blob = new Blob(chunks);
+        const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
@@ -119,7 +93,7 @@ const MainSection = ({ }: IProps) => {
         link.click();
         document.body.removeChild(link);
 
-        URL.revokeObjectURL(blobUrl);
+        
     } catch (error) {
         console.error("Error downloading file:", error);
         toast.error("Failed to download the file. Please try again later.");
