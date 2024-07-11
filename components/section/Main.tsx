@@ -78,30 +78,12 @@ const MainSection = ({ }: IProps) => {
         router.replace(`/?s=${value}`)
         DownloadVideo()
     }
-const saveFile = async (url: string) => {
+
+    const saveFile = async (url: string) => {
     try {
         toast.success("Please wait a moment while your download completes", { duration: 2000 });
-
         const response = await fetch(url);
-        
-        // Check if the response body exists and is not null
-        if (!response.body) {
-            throw new Error("Response body is null");
-        }
-
-        const reader = response.body.getReader();
-        const stream = new ReadableStream<Uint8Array>({
-            async start(controller) {
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    controller.enqueue(value!);
-                }
-                controller.close();
-            }
-        });
-
-        const blob = await new Response(stream).blob();
+        const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
@@ -111,7 +93,6 @@ const saveFile = async (url: string) => {
         link.click();
         document.body.removeChild(link);
 
-        toast.success("Download complete!");
         
     } catch (error) {
         console.error("Error downloading file:", error);
