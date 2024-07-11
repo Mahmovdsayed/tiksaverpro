@@ -79,11 +79,30 @@ const MainSection = ({ }: IProps) => {
         DownloadVideo()
     }
 
-    const saveFile = async (url: string) => {
+const saveFile = async (url: string) => {
     try {
         toast.success("Please wait a moment while your download completes", { duration: 2000 });
         const response = await fetch(url);
-        const blob = await response.blob();
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        const reader = response.body.getReader();
+        const contentLength = +response.headers.get('Content-Length');
+
+        let receivedLength = 0;
+        const chunks = [];
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            receivedLength += value.length;
+
+            // Display progress
+            console.log(`Received ${receivedLength} of ${contentLength}`);
+            toast(`Downloading: ${Math.round((receivedLength / contentLength) * 100)}%`, { duration: 1000 });
+        }
+
+        const blob = new Blob(chunks);
         const blobUrl = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
@@ -93,7 +112,7 @@ const MainSection = ({ }: IProps) => {
         link.click();
         document.body.removeChild(link);
 
-        
+        URL.revokeObjectURL(blobUrl);
     } catch (error) {
         console.error("Error downloading file:", error);
         toast.error("Failed to download the file. Please try again later.");
