@@ -47,7 +47,7 @@ export default function Nav() {
     const { slug } = useParams();
     return (
         <>
-            <Navbar onMenuOpenChange={setIsMenuOpen} shouldHideOnScroll>
+            <Navbar isBlurred isBordered onMenuOpenChange={setIsMenuOpen} >
                 <NavbarContent justify="end">
                     {/* <NavbarMenuToggle
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}

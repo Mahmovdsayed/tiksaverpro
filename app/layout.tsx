@@ -14,13 +14,13 @@ export const metadata: Metadata = {
   title: "TikTok Video Downloader - Download High-Quality Videos Without Watermark",
   keywords: ['tiksaverpro', 'Download tik tok video', 'tiktok download', 'tiktok', 'dopamine'],
   icons: {
-    icon: "https://res.cloudinary.com/dxvpvtcbg/image/upload/v1713853708/b9esspm0u8jykxkmrwyb.jpg",
+    icon: "https://res.cloudinary.com/dxvpvtcbg/image/upload/v1720867680/z7hacxwc0mw9zgblgsqn.svg",
     apple:
-      "https://res.cloudinary.com/dxvpvtcbg/image/upload/v1713853708/b9esspm0u8jykxkmrwyb.jpg",
+      "https://res.cloudinary.com/dxvpvtcbg/image/upload/v1720867680/z7hacxwc0mw9zgblgsqn.svg",
   },
   creator: "Mahmoud Sayed",
   applicationName: "tiksaverpro",
-
+  manifest: "/manifest.json",
   description:
     "Welcome to our TikTok Video Downloader! Easily download high-quality TikTok videos without any watermark. Simply paste the video link and get your favorite content directly to your device. Enjoy hassle-free downloading!",
   openGraph: {
@@ -50,9 +50,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <head>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7851367835426330" crossOrigin="anonymous"></script>
-      </head>
       <body className={inter.className}>
         <Providers>
           <Nav />

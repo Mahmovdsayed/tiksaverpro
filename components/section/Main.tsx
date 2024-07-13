@@ -1,5 +1,4 @@
 'use client'
-
 import { Button, Card, CardBody, CardHeader, Divider, Image, Input, Link, button, link } from "@nextui-org/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -11,11 +10,28 @@ import { usePathname } from 'next/navigation'
 import fileSaver from "file-saver";
 import toast from "react-hot-toast";
 import GetStarted from "./GetStarted";
-
+import { DownloadTiktokVideo } from "@/functions/DownloadTiktokVideo";
+import { motion } from "framer-motion";
 interface IProps {
 
 }
 const MainSection = ({ }: IProps) => {
+    const textVariants = {
+        hidden: { opacity: 0, x: -200 },
+        visible: { opacity: 1, x: 0, transition: { duration: 1 } }
+    };
+    const CardTop = {
+        hidden: { opacity: 0, y: 100 },
+        visible: { opacity: 1, y: 0, transition: { duration: 1 } }
+    };
+    const toBottom = {
+        hidden: { opacity: 0, y: -100 },
+        visible: { opacity: 1, y: 0, transition: { duration: 1 } }
+    };
+    const text2Variants = {
+        hidden: { opacity: 0, x: 200 },
+        visible: { opacity: 1, x: 0, transition: { duration: 1 } }
+    };
     const [Data, setData] = useState<any>([])
     const [Downloads, setDownloads] = useState<any>([])
     const [value, setValue] = useState("");
@@ -25,30 +41,14 @@ const MainSection = ({ }: IProps) => {
     const pathname = usePathname()
 
     const pageNumber = searchParams.get("s") ?? "";
+
     const DownloadVideo = async () => {
         setisLoading(true)
-        try {
-            const options = {
-                method: "POST",
-                headers: {
-                    accept: "application/json",
-                },
-
-            };
-            const data = await fetch(`https://snapdouyin.app/wp-json/aio-dl/video-data/?url=${value}`, options)
-            const response = await data.json()
-            setData(response)
-            setDownloads(response.medias)
-            setisLoading(false)
-        } catch (error: any) {
-
-            toast.error("Sorry, we couldn't find the requested video. Please double-check the link and try again.", { position: 'top-center' })
-
-        }
-
-
-
-
+        const data = await DownloadTiktokVideo(value)
+        console.log(data)
+        setData(data)
+        setDownloads(data.medias)
+        setisLoading(false)
     }
     const router = useRouter();
     const defaultContent =
@@ -78,33 +78,68 @@ const MainSection = ({ }: IProps) => {
         router.replace(`/?s=${value}`)
         DownloadVideo()
     }
-    const saveFile = async (url: string) => {
-    try {
-        toast.success("Please wait a moment while your download completes", { duration: 2000 });
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
 
-        const link = document.createElement("a");
-        link.href = blobUrl;
-        link.download = `tiksaverpro`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const saveFile = async (url: string, extension: string) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Network response was not ok");
 
-        
-    } catch (error) {
-        console.error("Error downloading file:", error);
-        toast.error("Failed to download the file. Please try again later.");
-    }
-};
+            if (!response.body) throw new Error("ReadableStream not yet supported in this browser.");
+
+            const contentLength = response.headers.get('Content-Length');
+            if (!contentLength) throw new Error("Content-Length response header missing.");
+
+            const reader = response.body.getReader();
+            const total = parseInt(contentLength, 10);
+
+            let receivedLength = 0;
+            const chunks = [];
+            const toastId = toast.loading("Downloading: 0%");
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                receivedLength += value.length;
+
+                // Display progress
+                const percentage = Math.round((receivedLength / total) * 100);
+                toast.loading(`Downloading: ${percentage}%`, { id: toastId });
+            }
+
+            toast.dismiss(toastId);
+            toast.success("Download complete!");
+
+            const blob = new Blob(chunks);
+            const blobUrl = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = `tiksaverpro.${extension}`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error("Error downloading file:", error);
+            toast.error("Failed to download the file. Please try again later.");
+        }
+    };
     return <>
         <div className="text-center mt-6 px-6">
-            <h1 className="text-xl lg:text-2xl  font-medium"><span className="font-bold text-pink-600">TikTok Video Downloader</span> - Download High-Quality Videos Without Watermark</h1>
-            <p className="mt-3 lg:w-1/2 m-auto text-default-500 text-sm md:text-md lg:text-lg">Welcome to our TikTok Video Downloader! Easily download high-quality TikTok videos without any watermark. Simply paste the video link and get your favorite content directly to your device. Enjoy hassle-free downloading!</p>
+            <motion.h1 variants={textVariants}
+                initial="hidden"
+                
+                animate="visible" className="my-4 text-2xl font-bold lg:text-6xl capitalize md:uppercase"><span className="font-bold text-pink-600">TikTok Video Downloader</span> - Download High-Quality Videos Without Watermark</motion.h1>
+            <motion.p variants={text2Variants}
+                initial="hidden"
+                animate="visible" className='my-2 line-clamp-6 text-default-600 font-medium text-tiny md:text-medium text-wrap  '>Welcome to our TikTok Video Downloader! Easily download high-quality TikTok videos without any watermark. Simply paste the video link and get your favorite content directly to your device. Enjoy hassle-free downloading!</motion.p>
         </div>
         <Divider className="mt-6 mx-3 w-4/5 md:w-1/2" />
-        <div className="w-full md:w-1/2 px-6 flex mt-4  items-center">
+        <motion.div variants={toBottom}
+            initial="hidden"
+            animate="visible" className="w-full md:w-1/2 px-6 flex mt-4  items-center">
             <form
                 className="w-full flex mt-6  items-center"
                 onSubmit={handleSubmit}            >
@@ -150,7 +185,7 @@ const MainSection = ({ }: IProps) => {
 
             </form>
 
-        </div>
+        </motion.div>
         {formik.errors.url && formik.touched.url ? (
             <div className="text-tiny mt-2 p-2 text-red-500">
                 {formik.errors.url}
@@ -158,7 +193,9 @@ const MainSection = ({ }: IProps) => {
         ) : (
             ""
         )}
-        <div className="w-full md:w-1/2 px-6 flex mt-4 justify-center items-center">
+        <motion.div variants={CardTop}
+            initial="hidden"
+            animate="visible" className="w-full md:w-1/2 px-6 flex mt-4 justify-center items-center">
             <Card className="bg-[#f0f0f0] dark:bg-[#181818]" shadow="none">
                 <CardHeader className="text-tiny md:text-md">we only accept links in the following formats</CardHeader>
                 <CardBody className="flex flex-col space-y-2 text-tiny text-indigo-400">
@@ -170,8 +207,8 @@ const MainSection = ({ }: IProps) => {
                     <span>https://vt.tiktok.com/abcdefg</span>
                 </CardBody>
             </Card>
-        </div>
-       
+        </motion.div>
+
 
         <div className={Data.length == 0 ? "hidden" : "mt-6 px-6 flex flex-col items-center"}>
             <Image className="h-[300px] w-[300px]" alt={Data.title} isZoomed src={Data.thumbnail} />
@@ -183,7 +220,7 @@ const MainSection = ({ }: IProps) => {
                 <p className="text-tiny font-semibold py-3 text-center text-default-500 ">Please note that downloading may take some time for larger video files</p>
 
                 <div className={Downloads.length == 0 ? "hidden" : "flex flex-col justify-center items-center space-y-2"}>
-                    {Downloads.map((download: any) => <Button onClick={() => saveFile(download.url)} key={download.size} color="danger" radius="sm" className="w-full">
+                    {Downloads.map((download: any) => <Button onClick={() => saveFile(download.url, download.extension)} key={download.size} color="danger" radius="sm" className="w-full">
                         Download {download.quality} <span className="text-tiny font-medium">{download.formattedSize}</span>
                     </Button>
 

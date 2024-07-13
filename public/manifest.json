@@ -1,0 +1,27 @@
+{
+  "theme_color": "#181818",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icon512_maskable.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "icon512_rounded.png",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "en-US",
+  "name": "TikTok Video Downloader - Download High-Quality Videos Without Watermark",
+  "short_name": "TikSaverPro",
+  "start_url": "/",
+  "scope": "/",
+  "description": "Welcome to our TikTok Video Downloader! Easily download high-quality TikTok videos without any watermark. Simply paste the video link and get your favorite content directly to your device. Enjoy hassle-free downloading!"
+}
