@@ -78,6 +78,16 @@ const MainSection = ({ }: IProps) => {
         router.replace(`/?s=${value}`)
         DownloadVideo()
     }
+<<<<<<< HEAD
+=======
+
+    const saveFile = async (url: string) => {
+    try {
+        toast.success("Please wait a moment while your download completes", { duration: 2000 });
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+>>>>>>> 783782686b5bf51d2d936852a32624086e5d2000
 
     const saveFile = async (url: string, extension: string) => {
         try {

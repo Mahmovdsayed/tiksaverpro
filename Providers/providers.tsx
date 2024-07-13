@@ -19,7 +19,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     }, []);
 
     return <>
-        {loading == true ? <LoadingScreen /> :
+        {loading  ? <LoadingScreen /> :
             <div>
                 <NextUIProvider navigate={router.push}>
                     <NextThemesProvider attribute="class">
