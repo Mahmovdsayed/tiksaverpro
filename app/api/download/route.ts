@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
 
     const data = await Tiktok.Downloader(url, {
       version: "v1",
+      proxy: "https://204.236.137.68:80",
     });
     const dataV2 = await Tiktok.Downloader(url, {
       version: "v3",
