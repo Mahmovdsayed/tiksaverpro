@@ -23,12 +23,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await limiter.checkNext(req, 100);
+    // await limiter.checkNext(req, 100);
 
     const data = await Tiktok.Downloader(url, {
       version: "v1",
-      proxy: "204.236.137.68:80",
+      proxy: "13.37.73.214:80",
     });
+
     const dataV2 = await Tiktok.Downloader(url, {
       version: "v3",
     });
