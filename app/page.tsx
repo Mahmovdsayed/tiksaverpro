@@ -2,7 +2,7 @@ import MainSection from "@/components/section/Main";
 
 export default function Home() {
   return <>
-    <main className="container mx-auto min-h-[90vh] py-6 flex flex-col items-center justify-center overflow-hidden">
+    <main className="min-h-[100dvh] bg-gradient-to-b from-white to-gray-200 dark:from-black dark:to-[#181818] overflow-hidden">
       <MainSection />
     </main>
   </>
