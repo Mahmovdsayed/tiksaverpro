@@ -25,15 +25,10 @@ export async function POST(req: NextRequest) {
 
     // await limiter.checkNext(req, 100);
 
-    const data = await Tiktok.Downloader(url, {
-      version: "v1",
-      proxy: "13.37.73.214:80",
-    });
-
     const dataV2 = await Tiktok.Downloader(url, {
       version: "v3",
     });
-    return NextResponse.json({ data, dataV2 }, { status: 200 });
+    return NextResponse.json(dataV2, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
       {

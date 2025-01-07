@@ -10,20 +10,8 @@ const Features = () => {
             description: "Download videos in the highest available quality (e.g., 1080p, 4K)."
         },
         {
-            title: "Video Information Display",
-            description: "View video descriptions, hashtags, and creation time."
-        },
-        {
-            title: "Author Details",
-            description: "Get information about the video creator, including their username, nickname, signature, region, and profile picture."
-        },
-        {
             title: "Privacy Focused",
             description: "No account registration or personal information is required for downloading."
-        },
-        {
-            title: "Mobile-Friendly",
-            description: "Fully responsive design optimized for mobile, tablet, and desktop devices."
         },
         {
             title: "Fast and Free",
